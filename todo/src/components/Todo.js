@@ -1,8 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './todo.css'
 const Todo = () => {
+  const getitems=()=>{
+    const lists =localStorage.getItem("mytodo");
+    if(lists){
+      return JSON.parse(lists)
+    }else{
+      return [];
+    }
+  }
   const[input,setinput]=useState("")
-    const[items,setitems]=useState([]);
+    const[items,setitems]=useState(getitems());
  const additem=()=>{
   if(!input){
     alert('plz fill input')
@@ -31,12 +39,21 @@ const Todo = () => {
 
 
 
-    const updateitem=(index,input)=>{
+    const updateitem=(index)=>{
+      const newmy=prompt('rename task')
       const update=items.filter((curElem)=>{
-        return( curElem.id===index)?curElem.name=input:curElem.name
+        return( curElem.id===index)?curElem.name=newmy:curElem.name
       })
       setitems(update)
     }
+
+
+
+
+
+    useEffect(()=>{
+localStorage.setItem("mytodo",JSON.stringify(items));
+    },[items]);
   return (
     <>
          <div className="main-div">
@@ -64,7 +81,7 @@ const Todo = () => {
                   <div className="todo-btn">
                     <i
                       className="far fa-edit add-btn"
-                      onClick={()=>updateitem(curElem.id,input)}></i>
+                      onClick={()=>updateitem(curElem.id)}></i>
                     <i
                       className="far fa-trash-alt add-btn"
                      onClick={()=>deleteitem(curElem.id)}></i>
